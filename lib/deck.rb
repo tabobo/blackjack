@@ -9,20 +9,21 @@ class Deck
     @deck.shuffle!
   end
 
-  def take_card
+  def random_card
     card = self.deck.sample
+  end
+
+  def delete_card(card)
     @deck.delete(card)
-    return card
   end
 
   private
 
   def create_deck
-    ranks = %w[2 3 4 5 6 7 8 9 10 JACK QUEEN KING ACE]
+    ranks = %w[2 3 4 5 6 7 8 9 10 JACK QUEEN KING]
     suits = %w[♠ ♥ ♣ ♦]
     suits.each do |suit|
       ranks.each do |rank|
-        #@deck.push("#{suit} #{rank}")
         @deck << Card.new(suit, rank)
       end
     end

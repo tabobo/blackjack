@@ -26,4 +26,7 @@ class Hand
     return points
   end
 
+  def bust?
+    points > 21
+  end
 end

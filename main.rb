@@ -1,3 +1,13 @@
+require_relative 'lib/player'
+require_relative 'lib/card'
+require_relative 'lib/bank'
+require_relative 'lib/deck'
+require_relative 'lib/interface'
+require_relative 'lib/hand'
+require_relative 'lib/dealer'
+
+
+
 # Ask player's name
   # Everyone has 100$
     # Initialize deck of cards
@@ -19,4 +29,107 @@
                       # play again?
 
 class Main
+attr_reader :player, :dealer, :deck
+
+  def initialize
+    @deck = Deck.new
+    @dealer = Dealer.new
+    @player = Player.new
+    @interface = Interface.new(@player, @dealer)
+
+  end
+
+  def start_game
+    @interface.ask_name
+    deal_cards(player, dealer)
+    player.bet
+    @interface.show_table
+    @open_cards = false
+    play_game
+    winner = count_results
+    @interface.show_results(winner)
+
+    # loop do
+    #   deal_cards(player, dealer, deck)
+    #   player.balance.bet 
+    #   @interface.show_table
+    #   play_game
+    #   @interface.show_results
+    # end
+  end
+
+  private
+
+
+  def play_game
+    loop do
+      players_turn
+      dealers_turn unless @open_cards
+      break if @open_cards || (@dealer.hand.cards.size == 3 && @player.hand.cards.size == 3)
+    end
+    open_cards
+    # case choice
+    # when '1' then @player.hand.take_card(@deck)
+    # when '2' then dealers_turn
+    # when '3' then open_cards
+    # end
+  end
+
+  def players_turn
+    @interface.choice
+    @choice = gets.chomp.downcase
+    if @choice == '1'
+      puts 'Player hits'
+      @player.hand.take_card(@deck)
+      @interface.show_cards(@player)
+    elsif @choice == '2'
+      puts 'Player stands'
+    elsif @choice == '3'
+      @open_cards = true
+      open_cards
+    else
+      puts 'Wrong input'
+    end
+  end
+
+  def dealers_turn
+    puts 'dealers turn'
+    puts @interface.points(@dealer)
+    if @dealer.hand.hand_value < 17 && @dealer.hand.cards.size < 3
+      @dealer.hand.take_card(@deck)
+      puts 'Dealer hits'
+    elsif @dealer.hand.hand_value == 21
+      puts 'Black Jack!'
+    else
+      puts 'Dealer Stands!'
+    end
+  end
+
+  def count_results
+    d_points = @dealer.hand.hand_value
+    p_points = @player.hand.hand_value
+    return @player if d_points > 21 
+    return @player if p_points > d_points && p_points <= 21
+    return @dealer if p_points > 21
+    return @dealer if d_points > p_points && d_points <= 21
+    
+    return nill
+  end
+
+  def open_cards
+    puts 'open cards'
+    @interface.show_cards(@player)
+    @interface.show_cards(@dealer)
+  end
+
+  def deal_cards(player,dealer)
+    2.times do 
+      player.hand.take_card(@deck)
+      dealer.hand.take_card(@deck)
+    end
+  end
+
 end
+
+game = Main.new
+game.start_game
