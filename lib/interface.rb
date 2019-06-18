@@ -1,5 +1,6 @@
 require 'pry'
 class Interface
+  BET_AMOUNT = 10
 
   def initialize(player, dealer)
     @player = player
@@ -13,7 +14,7 @@ class Interface
     list_cards(@player)
     puts "Your score: #{points(@player)}"
     puts "Balance: #{@player.bank.balance}$"
-    puts 'Your bet was 10$'
+    puts "Your bet was #{BET_AMOUNT}$"
     puts '------------------------------' 
   end
 
@@ -63,7 +64,7 @@ class Interface
   # end
 
   def show_results(winner)
-    puts "You beat the dealer! Your balance: #{@player.bank.balance}" if winner == @player
+    puts "You beat the dealer! Your balance: #{@player.bank.balance}. Dealer balance: #{@dealer.bank.balance}." if winner == @player
     puts "Dealer wins. Dealer balance: #{@dealer.bank.balance}. Your balance: #{@player.bank.balance}" if winner == @dealer
     puts "You tied the dealer, nobody wins. Dealer balance: #{@dealer.bank.balance}. Your balance: #{@player.bank.balance}" if winner.nil?
   end

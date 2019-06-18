@@ -9,6 +9,14 @@ class Card
     @value = calculate_value(rank)
   end
 
+  def count_ace
+    ace? ? 1 : @value
+  end
+
+  def ace?
+    @rank == 'ACE'
+  end
+
   def name
     "#{@suit} #{@rank}"
   end
@@ -17,8 +25,8 @@ class Card
 
   def calculate_value(rank)
     case rank
-    when 'JACK', 'QUEEN', 'KING' then 10
     when 'ACE' then 11
+    when 'JACK', 'QUEEN', 'KING' then 10
     else rank.to_i
     end
   end

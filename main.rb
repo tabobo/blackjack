@@ -30,7 +30,7 @@ require_relative 'lib/dealer'
 
 class Main
   attr_reader :player, :dealer, :deck
-  BET_AMOUNT = 40
+  BET_AMOUNT = 10
 
   def initialize
     @deck = Deck.new
@@ -104,14 +104,14 @@ class Main
   def count_results
     d_points = @dealer.hand.hand_value
     p_points = @player.hand.hand_value
+    return nil if (@player.hand.bust? && @dealer.hand.bust?) || d_points == p_points
     return @player if @dealer.hand.bust? || (p_points > d_points && p_points <= 21)
     return @dealer if @player.hand.bust? || d_points > p_points
-    return nil if (@player.hand.bust? && @dealer.hand.bust?) || d_points == p_points
   end
 
   def reward(winner)
     if winner.nil?
-      @players.each { |player| player.bank.reward(@bank / 2.to_f) }
+      @players.each { |player| player.bank.reward(@bank / 2) }
     else
       winner.bank.reward(@bank)
     end

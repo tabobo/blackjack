@@ -21,9 +21,16 @@ class Hand
   end
 
   def hand_value
-    points = 0
-    @cards.each { |card| points += card.value}
-    return points
+    # points = 0
+    # @cards.each { |card| points += card.value}
+    # return points
+
+    points_sum = @cards.sum(&:value)
+    if points_sum > 21
+      @cards.sum(&:count_ace)
+    else
+      points_sum
+    end
   end
 
   def bust? 
