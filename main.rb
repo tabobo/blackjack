@@ -29,33 +29,33 @@ require_relative 'lib/dealer'
                       # play again?
 
 class Main
-attr_reader :player, :dealer, :deck
+  attr_reader :player, :dealer, :deck
+  BET_AMOUNT = 40
 
   def initialize
     @deck = Deck.new
     @dealer = Dealer.new
     @player = Player.new
+    @players = [@player, @dealer]
     @interface = Interface.new(@player, @dealer)
-
+    @bank = 0
   end
 
   def start_game
     @interface.ask_name
-    deal_cards(player, dealer)
-    player.bet
-    @interface.show_table
-    @open_cards = false
-    play_game
-    winner = count_results
-    @interface.show_results(winner)
-
-    # loop do
-    #   deal_cards(player, dealer, deck)
-    #   player.balance.bet 
-    #   @interface.show_table
-    #   play_game
-    #   @interface.show_results
-    # end
+    loop do
+      @players.each { |player| player.reset_cards }
+      deal_cards(player, dealer)
+      bet
+      break if @players.find { |player| player.bank.zero_balance? }
+      @interface.show_table
+      @open_cards = false
+      play_game
+      winner = count_results
+      reward(winner)
+      @interface.show_results(winner)
+      break unless @interface.new_game?
+    end
   end
 
   private
@@ -67,12 +67,7 @@ attr_reader :player, :dealer, :deck
       dealers_turn unless @open_cards
       break if @open_cards || (@dealer.hand.cards.size == 3 && @player.hand.cards.size == 3)
     end
-    open_cards
-    # case choice
-    # when '1' then @player.hand.take_card(@deck)
-    # when '2' then dealers_turn
-    # when '3' then open_cards
-    # end
+    open_cards unless @open_cards
   end
 
   def players_turn
@@ -105,15 +100,29 @@ attr_reader :player, :dealer, :deck
     end
   end
 
+# Проверить. Не работает, когда у игрока больше очков чем у дилера после 21
   def count_results
     d_points = @dealer.hand.hand_value
     p_points = @player.hand.hand_value
-    return @player if d_points > 21 
-    return @player if p_points > d_points && p_points <= 21
-    return @dealer if p_points > 21
-    return @dealer if d_points > p_points && d_points <= 21
-    
-    return nill
+    return @player if @dealer.hand.bust? || (p_points > d_points && p_points <= 21)
+    return @dealer if @player.hand.bust? || d_points > p_points
+    return nil if (@player.hand.bust? && @dealer.hand.bust?) || d_points == p_points
+  end
+
+  def reward(winner)
+    if winner.nil?
+      @players.each { |player| player.bank.reward(@bank / 2.to_f) }
+    else
+      winner.bank.reward(@bank)
+    end
+    @bank = 0
+  end
+
+  def bet
+    @players.each do |player| 
+      player.bank.bet(BET_AMOUNT) 
+      @bank += BET_AMOUNT
+    end
   end
 
   def open_cards
@@ -122,7 +131,7 @@ attr_reader :player, :dealer, :deck
     @interface.show_cards(@dealer)
   end
 
-  def deal_cards(player,dealer)
+  def deal_cards(player, dealer)
     2.times do 
       player.hand.take_card(@deck)
       dealer.hand.take_card(@deck)

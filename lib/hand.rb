@@ -26,7 +26,7 @@ class Hand
     return points
   end
 
-  def bust?
-    points > 21
+  def bust? 
+    hand_value > 21
   end
 end

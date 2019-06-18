@@ -12,7 +12,7 @@ class Interface
     puts 'Your cards:'
     list_cards(@player)
     puts "Your score: #{points(@player)}"
-    puts "Balance: #{@player.balance}$"
+    puts "Balance: #{@player.bank.balance}$"
     puts 'Your bet was 10$'
     puts '------------------------------' 
   end
@@ -41,7 +41,7 @@ class Interface
     puts "Players cards:" if player == @player
     puts "Dealers cards:" if player == @dealer
     list_cards(player)
-    puts "Players score: #{points(player)}"
+    puts "Score: #{points(player)}"
     puts '------------------'
   end
 
@@ -63,14 +63,21 @@ class Interface
   # end
 
   def show_results(winner)
-    puts 'You beat the dealer!' if winner == @player
-    puts 'Dealer wins' if winner == @dealer
-    puts 'You tied the dealer, nobody wins.' if winner.nil?
+    puts "You beat the dealer! Your balance: #{@player.bank.balance}" if winner == @player
+    puts "Dealer wins. Dealer balance: #{@dealer.bank.balance}. Your balance: #{@player.bank.balance}" if winner == @dealer
+    puts "You tied the dealer, nobody wins. Dealer balance: #{@dealer.bank.balance}. Your balance: #{@player.bank.balance}" if winner.nil?
   end
 
   def new_game?
+    puts 'Another game?'
+    puts 'y = yes, n = no'
+    gets.chomp == 'y'
   end
 
+  def player_bankrupt?(player)
+    
+    puts "Player doesn't have money"
+  end
 
 end
 

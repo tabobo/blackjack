@@ -1,11 +1,10 @@
 class Player
-  attr_reader :cards, :balance, :bank
+  attr_reader :cards, :bank
   attr_accessor :hand
   
   def initialize
     @cards = []
     @bank = Bank.new
-    @balance = @bank.balance
     @hand = Hand.new(@cards)
   end
 
@@ -13,15 +12,9 @@ class Player
     @cards << card
   end
 
-  def bet(amount = 10)
-    @balance -= amount
+  def reset_cards
+    @cards = []
+    @hand = Hand.new(@cards)
   end
 
-  # def list_cards
-  #   @cards.each_with_index { |card, i| puts card.name }
-  # end
-
-  def bankrupt?
-    @balance.zero?
-  end
 end
