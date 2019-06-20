@@ -1,6 +1,6 @@
 class Bank
   attr_reader :balance
-  
+
   def initialize(balance = 100)
     @balance = balance
   end

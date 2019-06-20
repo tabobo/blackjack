@@ -10,7 +10,7 @@ class Deck
   end
 
   def random_card
-    card = self.deck.sample
+    deck.sample
   end
 
   def delete_card(card)

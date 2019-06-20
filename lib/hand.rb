@@ -3,7 +3,7 @@ class Hand
 
   attr_reader :card, :deck, :cards
 
-  def initialize(cards)
+  def initialize(_cards)
     @cards = []
   end
 
@@ -17,14 +17,9 @@ class Hand
     @cards << card
   end
 
-  def open_cards
-  end
+  def open_cards; end
 
   def hand_value
-    # points = 0
-    # @cards.each { |card| points += card.value}
-    # return points
-
     points_sum = @cards.sum(&:value)
     if points_sum > 21
       @cards.sum(&:count_ace)
@@ -33,7 +28,7 @@ class Hand
     end
   end
 
-  def bust? 
+  def bust?
     hand_value > 21
   end
 end

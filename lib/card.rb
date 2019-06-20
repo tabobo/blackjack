@@ -2,7 +2,7 @@ require_relative './deck'
 
 class Card
   attr_reader :suit, :value, :rank
-  
+
   def initialize(suit, rank)
     @suit = suit
     @rank = rank
@@ -21,7 +21,7 @@ class Card
     "#{@suit} #{@rank}"
   end
 
-  #private
+  # private
 
   def calculate_value(rank)
     case rank

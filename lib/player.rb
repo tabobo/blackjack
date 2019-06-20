@@ -1,7 +1,7 @@
 class Player
   attr_reader :cards, :bank
   attr_accessor :hand
-  
+
   def initialize
     @cards = []
     @bank = Bank.new
@@ -16,5 +16,4 @@ class Player
     @cards = []
     @hand = Hand.new(@cards)
   end
-
 end
