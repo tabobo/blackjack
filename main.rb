@@ -43,7 +43,7 @@ class Main
     loop do
       players_turn
       dealers_turn unless @open_cards
-      break if @open_cards || (@dealer.hand.cards.size == 3 && @player.hand.cards.size == 3)
+      break if @open_cards || (@dealer.hand.cards.size == Hand::CARDS_MAX_AMOUNT && @player.hand.cards.size == Hand::CARDS_MAX_AMOUNT)
     end
     open_cards unless @open_cards
   end
@@ -70,10 +70,10 @@ class Main
 
   def dealers_turn
     puts 'Dealers turn:'
-    if @dealer.hand.hand_value < 17 && @dealer.hand.cards.size < 3
+    if @dealer.hand.hand_value < 17 && @dealer.hand.cards.size < Hand::CARDS_MAX_AMOUNT
       @dealer.hand.take_card(@deck)
       puts 'Dealer hits'
-    elsif @dealer.hand.hand_value == 21
+    elsif @dealer.hand.hand_value == Hand::BLACK_JACK
       puts 'Black Jack!'
     else
       puts 'Dealer Stands!'
@@ -84,7 +84,7 @@ class Main
     d_points = @dealer.hand.hand_value
     p_points = @player.hand.hand_value
     return nil if (@player.hand.bust? && @dealer.hand.bust?) || d_points == p_points
-    return @player if @dealer.hand.bust? || (p_points > d_points && p_points <= 21)
+    return @player if @dealer.hand.bust? || (p_points > d_points && p_points <= Hand::BLACK_JACK)
     return @dealer if @player.hand.bust? || d_points > p_points
   end
 

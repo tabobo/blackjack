@@ -1,5 +1,6 @@
 class Hand
   CARDS_MAX_AMOUNT = 3
+  BLACK_JACK = 21
 
   attr_reader :card, :deck, :cards
 
@@ -17,11 +18,9 @@ class Hand
     @cards << card
   end
 
-  def open_cards; end
-
   def hand_value
     points_sum = @cards.sum(&:value)
-    if points_sum > 21
+    if points_sum > BLACK_JACK
       @cards.sum(&:count_ace)
     else
       points_sum
@@ -29,6 +28,6 @@ class Hand
   end
 
   def bust?
-    hand_value > 21
+    hand_value > BLACK_JACK
   end
 end

@@ -2,7 +2,16 @@ require_relative './deck'
 
 class Card
   attr_reader :suit, :value, :rank
-
+  
+  ACE_MIN_VALUE = 1
+  ACE_MAX_VALUE = 11
+  PIC_VALUE = 10
+  
+  ACE = 'ACE'
+  JACK = 'JACK'
+  QUEEN = 'QUEEN'
+  KING = 'KING'
+  
   def initialize(suit, rank)
     @suit = suit
     @rank = rank
@@ -10,11 +19,11 @@ class Card
   end
 
   def count_ace
-    ace? ? 1 : @value
+    ace? ? ACE_MIN_VALUE : @value
   end
 
   def ace?
-    @rank == 'ACE'
+    @rank == ACE
   end
 
   def name
@@ -25,8 +34,8 @@ class Card
 
   def calculate_value(rank)
     case rank
-    when 'ACE' then 11
-    when 'JACK', 'QUEEN', 'KING' then 10
+    when ACE then ACE_MAX_VALUE
+    when JACK, QUEEN, KING then PIC_VALUE
     else rank.to_i
     end
   end
